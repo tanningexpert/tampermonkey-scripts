@@ -22,12 +22,12 @@
       newDate: "07/07/2019",
       newLabel: "Patient Correspondence",
     },
-    // {
-    //   oldDocName: "ANDREAWRIGHT_Encounter_2016_07_13_28",
-    //   newDocName: "WWE 2016",
-    //   newDate: "07/13/2016",
-    //   newLabel: "Physician Established Patient Note",
-    // },
+    {
+      oldDocName: "ANDREAWRIGHT_Encounter_2016_07_13_28",
+      newDocName: "WWE 2016",
+      newDate: "07/13/2016",
+      newLabel: "Physician Established Patient Note",
+    },
   ];
 
   // CREATE BUTTON AND ADD TO PAGE
@@ -44,12 +44,41 @@
   bulkRenameBtn.addEventListener("click", (event) => {
     // for each object in array, run editDoc details function
     //documentList.forEach((element) => myTimeout );
-    for (let i = 0; i < documentList.length; i++) {
-      const openDocAndEditDetailsPromise = openDocAndEditDetails(
-        documentList[i]
-      );
-      console.log(documentList[i]);
-    }
+
+    // for (let i = 0; i < documentList.length; i++) {
+    //   const openDocAndEditDetailsPromise = openDocAndEditDetails(
+    //     documentList[i]
+    //   );
+    //   console.log(documentList[i]);
+    // }
+
+    // create array of promises from document list
+    const documentPromiseList = documentList.map((documentDetailsObj) => {
+      return () => {
+        console.log("function from promise array running");
+        const openDocAndEditDetailsPromise =
+          openDocAndEditDetails(documentDetailsObj);
+        return openDocAndEditDetailsPromise;
+      };
+    });
+
+    // run array of promises
+    console.log("documentPromiseList", documentPromiseList);
+    console.log(documentPromiseList.reduce);
+    documentPromiseList.reduce((cur, next) => {
+      console.log("reducer step");
+      console.log(cur);
+      return cur().then(next);
+    });
+
+    // old junk
+    // , () => {
+    //           console.log("all done");
+    // });
+    //     .then(function () {
+    //       console.log("all done");
+    //       //all executed
+    //     });
   });
 
   //ADD PROMISE CODE
