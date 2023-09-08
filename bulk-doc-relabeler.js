@@ -28,6 +28,12 @@
       newDate: "07/13/2016",
       newLabel: "Physician Established Patient Note",
     },
+    {
+      oldDocName: "ANDREAWRIGHT_Encounter_2016_07_13_29",
+      newDocName: "WWE 2016",
+      newDate: "07/13/2016",
+      newLabel: "Physician Established Patient Note",
+    },
   ];
 
   // CREATE BUTTON AND ADD TO PAGE
@@ -136,7 +142,7 @@
   const editDocDetails = (documentDetails) => {
     //EDIT DOCUMENT NAME
     const docForm = document.getElementById("document");
-    console.log("docForm", docForm);
+    //console.log("docForm", docForm);
     const docName = docForm.name;
     docName.value = documentDetails.newDocName;
     //const documentNameInput = document.getElementsByTagName('input')[38]
@@ -144,18 +150,18 @@
 
     //EDIT DOCUMENT LABEL
     const documentLabelInput = document.getElementsByTagName("select")[7];
-    console.log("documentLabelInput: ", documentLabelInput);
+    //console.log("documentLabelInput: ", documentLabelInput);
 
     //FIND LIST OF LABEL OPTIONS
     const newLabel = documentDetails.newLabel;
-    console.log(newLabel);
+    //console.log(newLabel);
     const labelOptions = document.getElementById("category.id").options;
-    console.log(labelOptions);
+    //console.log(labelOptions);
     //LOOP THROUGH LIST OF OPTIONS; IF INNERTEXT MATCHES NEWLABEL VARIABLE;
     const myOption = Array.from(labelOptions).find(
       (labelOption) => labelOption.innerText === newLabel
     );
-    console.log(myOption);
+    //console.log(myOption);
     // REPLACE LABEL WITH NEW LABEL VARIABLE
     documentLabelInput.value = myOption.value; // works
 
