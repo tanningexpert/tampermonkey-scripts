@@ -15,16 +15,6 @@
   // Your code here...
   console.log("Bulk Relabel Script Running");
 
-  // Add button
-  const bulkRenameBtn = document.createElement("button");
-  bulkRenameBtn.name = "singleFileNameButton";
-  bulkRenameBtn.innerHTML = "Rename Single File";
-  bulkRenameBtn.setAttribute(
-    "style",
-    "position: absolute; bottom: 64px; left: 15px; z-index: 5001;"
-  );
-  document.body.appendChild(bulkRenameBtn);
-
   const documentList = [
     {
       oldDocName: "ANDREAWRIGHT_Encounter_2019_07_07_5",
@@ -40,25 +30,40 @@
     // },
   ];
 
+  // CREATE BUTTON AND ADD TO PAGE
+  const bulkRenameBtn = document.createElement("button");
+  bulkRenameBtn.name = "singleFileNameButton";
+  bulkRenameBtn.innerHTML = "Rename Single File";
+  bulkRenameBtn.setAttribute(
+    "style",
+    "position: absolute; bottom: 64px; left: 15px; z-index: 5001;"
+  );
+  document.body.appendChild(bulkRenameBtn);
+
+  //ADD CLICK EVENT LISTENER
   bulkRenameBtn.addEventListener("click", (event) => {
     // for each object in array, run editDoc details function
     //documentList.forEach((element) => myTimeout );
     for (let i = 0; i < documentList.length; i++) {
-      openDocAndEditDetails(documentList[i]);
+      const openDocAndEditDetailsPromise = openDocAndEditDetails(
+        documentList[i]
+      );
       console.log(documentList[i]);
     }
   });
 
+  //ADD PROMISE CODE
+  // let updatedDoc = new Promise((resolve, reject) => {});
+
+  //FUNCTIONS
   const openDocAndEditDetails = (documentDetails) => {
     //FIND oldDocName
     const oldDocName = documentDetails.oldDocName;
-    //console.log(oldDocName);
     //FIND EDIT BUTTON OF oldDocName
     // GET ALL ROWS
     const wholeRow = document.querySelectorAll('[role="row"]');
     //console.log(wholeRow) // RETURNS LIST OF EVERY ROW STARTING WITH DATE
     //console.log('wholeRow:', wholeRow) // RETURNS all rows
-
     // GET ALL EDIT BUTTONS
     const editDownloadViewBtns = document.querySelectorAll(
       ".edit-button.right-align"
@@ -70,7 +75,6 @@
       } // end if
     } // end for loop
     //console.log(editBtns);
-
     //FOR EACH ROW; MATCH OLD DOC NAME TO KAREO NAME AND CLICK EDIT BUTTON
     for (let i = 0; i < wholeRow.length; i++) {
       const row = wholeRow[i]; // single row in table of documents
@@ -78,16 +82,26 @@
       //console.log('documentName: ', documentName.innerText);
       let innerName = documentName && documentName.innerText;
       //console.log('inner name: ', innerName);
-
       if (oldDocName === innerName) {
         // if row has correct name
         //console.log(editBtns[i]);
-
         editBtns[i].click(); // click edit button for row
       } // end if
     } // end for loop
 
-    setTimeout(() => editDocDetails(documentDetails), 1000);
+    console.log("1) before timeout runs");
+    const editDocDetailsPromise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("3) after timeout is finished");
+        editDocDetails(documentDetails).then(() => {
+          console.log("5) after editDocDetails promise resolves");
+          resolve();
+        }); // end then
+        console.log("4) after editDocDetails is started");
+      }, 1000); // end timeout
+    }); // end editDocDetailsPromise
+    console.log("2) before timeout is finished");
+    return editDocDetailsPromise;
   };
 
   const editDocDetails = (documentDetails) => {
@@ -134,11 +148,14 @@
     //console.log(dateInput)
     dateInput.value = documentDetails.newDate;
 
-    //CLICK SAVE
-    setTimeout(() => {
-      const saveBtn = document.getElementById("cancel");
-      //console.log(saveBtn)
-      saveBtn.click();
-    }, 1000);
+    let saveDocPromise = new Promise((resolve, reject) => {
+      //CLICK SAVE
+      setTimeout(() => {
+        const saveBtn = document.getElementById("cancel");
+        saveBtn.click();
+        resolve();
+      }, 1000);
+    });
+    return saveDocPromise;
   }; // END editDocDetails function
 })();
