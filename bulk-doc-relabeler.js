@@ -20,7 +20,7 @@
       newLabel: "Patient Correspondence",
     },
     {
-      oldDocName: "ANDREAWRIGHT_Encounter_2019_07_07_6",
+      oldDocName: "no match yo",
       newDocName: "PHONE NOTE",
       newDate: "07/07/2019",
       newLabel: "Patient Correspondence",
@@ -106,6 +106,23 @@
   openDocAndEditDetails
   ******************************************************************************/
   async function openDocAndEditDetails(documentDetails) {
+    const docFound = await openDocDetails(documentDetails);
+
+    if (docFound) {
+      await asyncTimeout(1500);
+      editDocDetails(documentDetails);
+      await asyncTimeout(1500);
+
+      // save and close modal
+      const saveBtn = document.getElementById("cancel");
+      saveBtn.click();
+    }
+  }
+
+  /* *****************************************************************************
+  openDocDetails
+  ******************************************************************************/
+  async function openDocDetails(documentDetails) {
     //FIND oldDocName
     const oldDocName = documentDetails.oldDocName;
     //FIND EDIT BUTTON OF oldDocName
@@ -144,21 +161,11 @@
       if (oldDocName === innerName) {
         nameFound = true;
         editBtns[i].click(); // click edit button for row
-        await asyncTimeout(1500);
         continue;
       }
     } // end for loop
 
-    if (!nameFound) {
-      return;
-    }
-
-    await editDocDetails(documentDetails);
-    await asyncTimeout(1500);
-
-    // save and close modal
-    const saveBtn = document.getElementById("cancel");
-    saveBtn.click();
+    return nameFound;
   }
 
   /* *****************************************************************************
